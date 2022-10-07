@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2% );
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.game-ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    background-color: gray;
+    height: 45%;
+    width: 45%;
+}
+
+li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid blue;
+    cursor: pointer;
+    font-size: 25px;
+}
