@@ -9,6 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 
@@ -21,11 +22,17 @@
     width: 45%;
 }
 
+.win-count {
+    display: flex;
+    justify-content: space-around;
+    width: 45%;
+}
+
 li {
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid blue;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 35px;
 }
