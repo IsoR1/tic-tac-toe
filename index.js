@@ -1,7 +1,25 @@
+const player = (name, mark) => {
+  let wins = 0;
+  
+  const addWin = () => wins++;
+  const getName = () => name;
+  const getWins = () => wins; 
+  const getMark = () => mark;
+  return { getName, addWin, getWins, getMark}
+}
+
+const daemon = player("Daemon", 'X');
+const aemond = player("Aemond", 'O');
 
 const gameBoard = (() => {
   let gameBoard = ['', '', '', '', '', '', '', '', ''];
-  
+  const getGameBoard = () => gameBoard;
+
+  // const getGameBoardArr = () => Array.from("         ");
+  // function getGameBoardArr() {
+  //   return Array.from("         ");
+  // }
+
   // cache dom
   let ul = document.querySelector(".game-ul");
 
@@ -23,61 +41,86 @@ const gameBoard = (() => {
       id++;
     })
   };
-
+  
   renderGameBoard();
   addId();
 
   return {
-    gameBoard: gameBoard,
+    getGameBoard,
+    // getGameBoardArr,
     ul: ul
   };
 })();
 
-const displayController = (() => {
-  const gb = gameBoard.gameBoard
-  let ul = gameBoard.ul
+const displayController = ((player1, player2) => {
+  const gb = gameBoard.getGameBoard();
+  // const gb = gameBoard.getGameBoardArr();
+  let ul = gameBoard.ul;
+  let currentPlayer = player1;
   
-  ul.addEventListener("click", makeMove)
-  ul.addEventListener("click", win)
+  ul.addEventListener("click", makeMove);
+  ul.addEventListener("click", win);
 
   function makeMove(e) {
     let pos = e.target;
     let posId = e.target.id;
     
-    if(validMove(e)) {
-    pos.innerHTML = "X";
-    gb[posId] = 'X'
-    console.log(e.target)
-    console.log(gb)
+    console.log(currentPlayer.getMark())
+    
+    if(validMove(e) && currentPlayer == player1) {
+      // pos.innerHTML = "X";
+      pos.innerHTML = player1.getMark();
+      gb[posId] = player1.getMark();
+      console.log(e.target);
+      console.log(gb);
+    } else if (validMove(e) && currentPlayer == player2) {
+      pos.innerHTML = player2.getMark();
+      gb[posId] = player2.getMark();
     }
+    changePlayer()
   };
 
   function validMove(e) {
     if (e.target.innerHTML == '') {
       return true;
     } else {
-      throw "error"
+      throw "error";
+    }
+  };
+
+  function changePlayer() {
+    if (currentPlayer == player1) {
+      currentPlayer = player2;
+    } else {
+      currentPlayer = player1;
     }
   }
 
   function win() {
-    if (gb[0] !== "" && gb[1] !== "" && gb[2] !== "" ||
-        gb[0] !== "" && gb[3] !== "" && gb[6] !== "" ||
-        gb[0] !== "" && gb[4] !== "" && gb[8] !== "" ||
 
-        gb[1] !== "" && gb[4] !== "" && gb[7] !== "" ||
+    if (gb[0] == currentPlayer.getMark() && gb[1] == currentPlayer.getMark() && gb[2] == currentPlayer.getMark() ||
+        gb[0] == currentPlayer.getMark() && gb[3] == currentPlayer.getMark() && gb[6] == currentPlayer.getMark()||
+        gb[0] == currentPlayer.getMark() && gb[4] == currentPlayer.getMark() && gb[8] == currentPlayer.getMark() ||
 
-        gb[2] !== "" && gb[5] !== "" && gb[8] !== "" ||
+        gb[1] == currentPlayer.getMark() && gb[4] == currentPlayer.getMark()  && gb[7] == currentPlayer.getMark() ||
+
+        gb[2] == currentPlayer.getMark() && gb[5] == currentPlayer.getMark() && gb[8] == currentPlayer.getMark() ||
         
-        gb[3] !== "" && gb[4] !== "" && gb[5] !== "" ||
+        gb[3] == currentPlayer.getMark() && gb[4] == currentPlayer.getMark() && gb[5] == currentPlayer.getMark() ||
 
-        gb[6] !== "" && gb[7] !== "" && gb[8] !== "" ||
-        gb[6] !== "" && gb[4] !== "" && gb[2] !== ""
+        gb[6] == currentPlayer.getMark() && gb[7] == currentPlayer.getMark() && gb[8] == currentPlayer.getMark() ||
+        gb[6] == currentPlayer.getMark() && gb[4] == currentPlayer.getMark() && gb[2] == currentPlayer.getMark()  
       ) {
-        console.log("win")
+
+        console.log(currentPlayer.getName())
+        currentPlayer.addWin();
+        console.log(currentPlayer.getWins());
         return true;
       }
   };
 
+})(daemon, aemond)
+
+const game = (() => {
 
 })()
