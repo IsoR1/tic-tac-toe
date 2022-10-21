@@ -8,17 +8,9 @@ const player = (name, mark) => {
   return { getName, addWin, getWins, getMark}
 }
 
-const daemon = player("Daemon", 'X');
-const aemond = player("Aemond", 'O');
-
 const gameBoard = (() => {
   let gameBoard = ['', '', '', '', '', '', '', '', ''];
   const getGameBoard = () => gameBoard;
-
-  // const getGameBoardArr = () => Array.from("         ");
-  // function getGameBoardArr() {
-  //   return Array.from("         ");
-  // }
 
   // cache dom
   let ul = document.querySelector(".game-ul");
@@ -47,38 +39,93 @@ const gameBoard = (() => {
 
   return {
     getGameBoard,
-    // getGameBoardArr,
     ul: ul
   };
 })();
 
-const displayController = ((player1, player2) => {
+const displayController = (() =>  {
+  let userOneP = document.querySelector(".u1");
+  let userTwoP = document.querySelector(".u2");
+
+  function getPlayer1Name() {
+    const firstPlayerName = prompt("What is your name?");
+    const firstPlayerMark = prompt("What is your mark?");
+    return player1 = player(firstPlayerName, firstPlayerMark)
+  }
+
+  function getPlayer2Name() {
+    const secondPlayerName = prompt("What is your name?");
+    const secondPlayerMark = prompt("What is your mark?");
+    return player2 = player(secondPlayerName, secondPlayerMark)
+  }
+
+  getPlayer1Name()
+  getPlayer2Name()
+
+  function renderScoreDisplay() {
+    userOneP.innerHTML = `${player1.getName()} has a score of ${player1.getWins()}!`
+    userTwoP.innerHTML = `${player2.getName()} has a score of ${player2.getWins()}!`
+  };
+
+  renderScoreDisplay();
+
+  return {
+    player1,
+    player2,
+    renderScoreDisplay,
+    userOneP,
+    userTwoP
+  }
+
+})()
+
+
+const game = ((player1, player2) => {
   const gb = gameBoard.getGameBoard();
-  // const gb = gameBoard.getGameBoardArr();
+  const renderScoreDisplay = displayController.renderScoreDisplay;
   let ul = gameBoard.ul;
+  let moveCounter = 0;
+
+
   let currentPlayer = player1;
+  let roundWin = false;
   
   ul.addEventListener("click", makeMove);
-  ul.addEventListener("click", win);
+
+
 
   function makeMove(e) {
     let pos = e.target;
     let posId = e.target.id;
-    
-    console.log(currentPlayer.getMark())
-    
+
+
+
     if(validMove(e) && currentPlayer == player1) {
-      // pos.innerHTML = "X";
       pos.innerHTML = player1.getMark();
       gb[posId] = player1.getMark();
-      console.log(e.target);
-      console.log(gb);
     } else if (validMove(e) && currentPlayer == player2) {
       pos.innerHTML = player2.getMark();
       gb[posId] = player2.getMark();
+    } 
+    moveCounter++;
+    if (win()) {
+      alert(`${currentPlayer.getName()} wins!`)
+      reset()
+      return;
     }
-    changePlayer()
+    
+    tie()
+
+    changePlayer();
   };
+  
+  function tie() {
+    if (moveCounter == 9) {
+      alert("It's a draw");
+      reset();
+    }
+  }
+
 
   function validMove(e) {
     if (e.target.innerHTML == '') {
@@ -94,7 +141,7 @@ const displayController = ((player1, player2) => {
     } else {
       currentPlayer = player1;
     }
-  }
+  };
 
   function win() {
 
@@ -111,16 +158,25 @@ const displayController = ((player1, player2) => {
         gb[6] == currentPlayer.getMark() && gb[7] == currentPlayer.getMark() && gb[8] == currentPlayer.getMark() ||
         gb[6] == currentPlayer.getMark() && gb[4] == currentPlayer.getMark() && gb[2] == currentPlayer.getMark()  
       ) {
-
-        console.log(currentPlayer.getName())
-        currentPlayer.addWin();
-        console.log(currentPlayer.getWins());
-        return true;
+      currentPlayer.addWin();
+      renderScoreDisplay();
+      roundWin = true
+      return true;
       }
   };
 
-})(daemon, aemond)
+  function reset() {
+    for (let i = 0; i < gb.length; i++) {
+      gb[i] = ''
+    }
+    
+    let li = document.querySelectorAll("li");
+    li.forEach(el => {
+      el.innerHTML = ''
+    })
 
-const game = (() => {
+    roundWin = false;
+    moveCounter = 0;
+  };
 
-})()
+})(player1, player2)
