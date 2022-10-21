@@ -43,6 +43,8 @@ const gameBoard = (() => {
   };
 })();
 
+// update score display
+
 const displayController = (() =>  {
   let userOneP = document.querySelector(".u1");
   let userTwoP = document.querySelector(".u2");
@@ -79,6 +81,7 @@ const displayController = (() =>  {
 
 })()
 
+// run game
 
 const game = ((player1, player2) => {
   const gb = gameBoard.getGameBoard();
